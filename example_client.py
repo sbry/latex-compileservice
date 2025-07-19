@@ -1,7 +1,7 @@
 """
     This script contains examples of working with the LaTeX compile service via the HTTP/JSON API.
 
-    This code is in python3, but deliberatey no special python client libraries specific to the
+    This code is in python3, but deliberately no special python client libraries specific to the
     service are used here, so the interaction with the API should translate to any other language
     and framework.
 
@@ -77,7 +77,7 @@ def render_sample_tex():
     response = requests.post(session_api_url, json=session_data, allow_redirects=True)
 
     assert response.status_code == 201  # resource should have been created, returning 201
-    my_session_url = response.headers['Location']  # will contain <SERVICE_URL>/api/sessions/<session_id>
+    my_session_url = _patch_url(response.headers['Location'])  # will contain <SERVICE_URL>/api/sessions/<session_id>
 
     # With the session now created and the session base URL captured as my_session_url, we can
     # post the file to /api/sessions/<session_id>/files, which can be built off of the returned
@@ -159,7 +159,7 @@ def render_with_template():
     session_data = {"compiler": "xelatex", "target": "rendered.tex"}
     response = requests.post(session_api_url, json=session_data, allow_redirects=True)
     assert response.status_code == 201  # resource should have been created, returning 201
-    my_session_url = response.headers['Location']  # will contain <SERVICE_URL>/api/sessions/<session_id>
+    my_session_url = _patch_url(response.headers['Location'])  # will contain <SERVICE_URL>/api/sessions/<session_id>
 
     # With the session now created and the session base URL captured as my_session_url, we can
     # post the file to /api/sessions/<session_id>/templates, which can be built off of the returned
