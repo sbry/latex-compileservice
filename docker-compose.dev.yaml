@@ -1,6 +1,5 @@
 # This is a development deployment for the application.  It has a single worker container and contains a definition for
 # a redis server.  The Flask application is set to debug and the environment to development.
-version: '3'
 
 services:
   # This is the Flask application itself, which depends on both the redis server and the worker. There only needs

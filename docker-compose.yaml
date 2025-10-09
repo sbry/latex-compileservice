@@ -1,7 +1,6 @@
 # This is a production deployment for the application.  It has a single worker container, though more can be added,
 # and contains a definition for a redis server.  There is also one celery beat scheduler.  The Flask application is
 # deployed using gunicorn rather than Flask's built in development wsgi server.
-version: '3'
 
 services:
   # This is the Flask application itself, which depends on both the redis server and the worker. There only needs
