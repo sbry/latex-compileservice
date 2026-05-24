@@ -18,12 +18,14 @@ COMPILERS = ['xelatex', 'pdflatex', 'lualatex']
 RenderResult = namedtuple('RenderResult', 'success product log')
 
 _latex_env = jinja2.Environment(
-    block_start_string=r'<!',
-    block_end_string='!>',
-    variable_start_string='<<',
-    variable_end_string='>>',
-    comment_start_string='<#',
-    comment_end_string='#>',
+    block_start_string=r'\BLOCK{',
+    block_end_string='}',
+    variable_start_string='\EXPR{',
+    variable_end_string='}',
+    comment_start_string='\#{',
+    comment_end_string='}',
+    line_statement_prefix='%#',
+    line_comment_prefix='%##',
     trim_blocks=True,
     autoescape=False,
     loader=jinja2.FileSystemLoader(os.path.abspath('.'))
@@ -31,7 +33,7 @@ _latex_env = jinja2.Environment(
 
 
 def compile_latex(session_id: str, working_directory: str, instance_key: str):
-    logging.info("Starting compilation on session %s", session_id)
+    logging.debug("Starting compilation on session %s", session_id)
     client = redis.from_url(ConfigBase.REDIS_URL)
     manager = SessionManager(client, TimeService(), instance_key, working_directory)
     session = manager.load_session(session_id)
@@ -119,7 +121,7 @@ def _render_and_compile(session_id: str, compiler: str, target: str, source_path
                "-interaction=nonstopmode",
                f"-jobname={session_id}",
                target]
-    logging.info(f"Compiling session {command}")
+
     # I'm not sure how many times a latex compiler should reasonably have to run in order to handle
     # a complex case, so I've conservatively set it to time out at 5
     run_count = 0
